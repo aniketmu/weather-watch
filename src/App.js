@@ -15,7 +15,7 @@ function App() {
 
   const fetchData = async (newKeyword) => {
     try {
-      const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=d365841a35bc48d0b9a83359230609&q=${newKeyword}`);
+      const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=q=${newKeyword}`);
       if (!response.ok) {
         throw new Error('Request failed');
       }
