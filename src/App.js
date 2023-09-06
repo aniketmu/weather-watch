@@ -16,9 +16,9 @@ function App() {
 
   const fetchData = async (newKeyword) => {
     const apiKey = process.env.REACT_APP_API_KEY;
-    
+
     try {
-      const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${newKeyword}`);
+      const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${newKeyword}`);
       if (!response.ok) {
         throw new Error('Request failed');
       }
