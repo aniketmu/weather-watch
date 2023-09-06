@@ -1,23 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Input from './components/Input';
+import SetUnits from './components/SetUnits';
+import WeatherReport from './components/WeatherReport';
 
 function App() {
+  const [error, setError] = useState(null);
+  const [weatherData, setWeatherData] = useState({});
+
+  const getResults = (event) => {
+     if (event.key === 'Enter') {
+      fetchData(event.target.value);
+    }
+  }
+
+  const fetchData = async (newKeyword) => {
+    try {
+      const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=d365841a35bc48d0b9a83359230609&q=${newKeyword}`);
+      if (!response.ok) {
+        throw new Error('Request failed');
+      }
+      const cities = await response.json();
+      console.log(cities);
+      setWeatherData(cities)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData('London');
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="weather-app">
+      <h1>WeatherWatch</h1>
+      <Input getResults={getResults} />
+      {error && <p>{error}</p>}
+      <WeatherReport
+        location={weatherData.location?.name || ""}
+        conditions={weatherData.current?.condition?.text || ""}
+        icon={weatherData.current?.condition?.icon || ""}
+        temp_c={weatherData.current?.temp_c || ""}
+        temp_f={weatherData.current?.temp_f || ""}
+        temp_min={weatherData.current?.temp_c || ""}
+        wind_speed={weatherData.current?.wind_kph || ""}
+        wind_direction={weatherData.current?.wind_dir || ""}
+        pressure={weatherData.current?.pressure_in || ""}
+        humidity={weatherData.current?.humidity || ""}
+      />
     </div>
   );
 }
